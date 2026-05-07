@@ -1,0 +1,33 @@
+@model QuanLyNhanVien.Models.Employee
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-danger">Xóa nhân viên</h1>
+    
+    <div class="alert alert-warning">
+        <strong>⚠️ Cảnh báo:</strong> Bạn sắp xóa nhân viên này. Hành động này không thể hoàn tác!
+    </div>
+
+    <div class="card p-4" style="max-width: 500px;">
+        <div class="mb-3">
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <img src="@Model.ImagePath" alt="@Model.HoTen" style="max-width: 150px; height: auto;" class="rounded d-block mb-2" />
+            }
+        </div>
+
+        <p><strong>Họ tên:</strong> @Model.HoTen</p>
+        <p><strong>Mã NV:</strong> @Model.MaNhanVien</p>
+        <p><strong>Khu vực:</strong> @Model.KhuVuc</p>
+        <p><strong>Ngày:</strong> @Model.Ngay.ToString("dd/MM/yyyy")</p>
+        <p><strong>Ghi chú:</strong> @Model.GhiChu</p>
+
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Xác nhận xóa
+            </button>
+        </form>
+        <a href="/Employee/Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Quay lại
+        </a>
+    </div>
+</div>

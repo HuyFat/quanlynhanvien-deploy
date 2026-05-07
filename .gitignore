@@ -1,0 +1,71 @@
+# Build and binary files
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.so
+*.dylib
+
+# IDE files
+.vs/
+.vscode/
+*.sln.iml
+*.user
+*.userprefs
+.idea/
+
+# Package manager
+packages/
+node_modules/
+.npm
+package-lock.json
+
+# Dependencies
+/node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Build output
+dist/
+build/
+*.o
+*.a
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Publish folder
+publish/
+PublishProfiles/
+
+# NuGet
+.nuget/
+*.nupkg
+*.snupkg
+
+# Local user-specific files
+launchSettings.json

@@ -1,0 +1,114 @@
+@model QuanLyNhanVien.Models.Employee
+
+<div class="container mt-4">
+    <div class="card shadow-sm form-card">
+        <div class="card-body p-4">
+            <h1 class="card-title mb-2">Cập nhật nhân viên</h1>
+            <p class="card-subtitle mb-4">Chỉnh sửa thông tin nhân viên và chọn khu vực phù hợp.</p>
+
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label for="HoTen" class="form-label">Họ tên <span class="text-danger">*</span></label>
+                    <input asp-for="HoTen" class="form-control" required />
+                    <span asp-validation-for="HoTen" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="MaNhanVien" class="form-label">Mã nhân viên <span class="text-danger">*</span></label>
+                    <input asp-for="MaNhanVien" class="form-control" required />
+                    <span asp-validation-for="MaNhanVien" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="KhuVuc" class="form-label">Khu vực</label>
+                    <select asp-for="KhuVuc" class="form-select" required>
+                        <option value="" disabled selected>-- Chọn khu vực --</option>
+                        <option value="Tổ Bình Đông">Tổ Bình Đông</option>
+                        <option value="Tổ Bình Tây">Tổ Bình Tây</option>
+                        <option value="Tổ Chánh Hưng 1">Tổ Chánh Hưng 1</option>
+                        <option value="Tổ Chánh Hưng 2">Tổ Chánh Hưng 2</option>
+                        <option value="Tổ Chợ Lớn">Tổ Chợ Lớn</option>
+                        <option value="Tổ Minh Phụng">Tổ Minh Phụng</option>
+                        <option value="Tổ Phú Định">Tổ Phú Định</option>
+                        <option value="Tổ Phú Thọ">Tổ Phú Thọ</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Vị trí hiện tại</label>
+                    <div class="d-flex gap-2 align-items-center">
+                        <button type="button" id="btnGetLocation" class="btn btn-outline-primary btn-sm">Lấy vị trí hiện tại</button>
+                        <span id="locationStatus" class="text-muted">@((Model.Latitude.HasValue && Model.Longitude.HasValue) ? $"{Model.Latitude:F5}, {Model.Longitude:F5}" : "Chưa có vị trí")</span>
+                    </div>
+                    <input type="hidden" asp-for="Latitude" />
+                    <input type="hidden" asp-for="Longitude" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="GhiChu" class="form-label">Ghi chú</label>
+                    <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Ngay" class="form-label">Ngày</label>
+                    <input type="datetime-local" asp-for="Ngay" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Hình ảnh hiện tại</label>
+                            <img src="@Model.ImagePath" alt="@Model.HoTen" class="rounded d-block mb-2" style="max-width: 150px; height: auto;" />
+                        </div>
+                    }
+                    <label for="imageFile" class="form-label">Cập nhật hình ảnh</label>
+                    <input type="file" name="imageFile" id="imageFile" class="form-control" accept="image/*" />
+                    <small class="form-text text-muted">Để trống nếu không muốn thay đổi hình ảnh</small>
+                </div>
+
+                <div class="d-flex gap-2 flex-wrap mb-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Cập nhật
+                    </button>
+                    <a href="/Employee/Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function updateLocationStatus(message) {
+            document.getElementById('locationStatus').textContent = message;
+        }
+
+        document.getElementById('btnGetLocation').addEventListener('click', function () {
+            if (!navigator.geolocation) {
+                updateLocationStatus('Trình duyệt không hỗ trợ định vị.');
+                return;
+            }
+
+            updateLocationStatus('Đang lấy vị trí...');
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                document.querySelector('input[name="Latitude"]').value = lat;
+                document.querySelector('input[name="Longitude"]').value = lng;
+                updateLocationStatus(`Đã lấy vị trí: ${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+            }, function (error) {
+                updateLocationStatus('Không thể lấy vị trí: ' + error.message);
+            }, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            });
+        });
+    </script>
+}

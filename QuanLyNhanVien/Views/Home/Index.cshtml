@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="text-center mb-5">
+                <h1 class="display-4 mb-3">
+                    <i class="bi bi-people-fill text-primary"></i>
+                    Quản lý Nhân viên
+                </h1>
+                <p class="lead text-muted">Hệ thống quản lý thông tin nhân viên hiệu quả và đơn giản</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-list-ul text-primary" style="font-size: 2.5rem;"></i>
+                            <h5 class="card-title mt-3">Danh sách nhân viên</h5>
+                            <p class="card-text text-muted">Xem và quản lý danh sách toàn bộ nhân viên</p>
+                            <a href="/Employee/Index" class="btn btn-primary">
+                                <i class="bi bi-arrow-right"></i> Xem danh sách
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-plus-circle text-success" style="font-size: 2.5rem;"></i>
+                            <h5 class="card-title mt-3">Thêm nhân viên mới</h5>
+                            <p class="card-text text-muted">Nhập thông tin và lưu dữ liệu mới</p>
+                            <a href="/Employee/Create" class="btn btn-success">
+                                <i class="bi bi-arrow-right"></i> Thêm mới
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 p-4 bg-light rounded">
+                <h5>📋 Tính năng chính:</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Nhập và cập nhật thông tin nhân viên</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Upload hình ảnh nhân viên</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Lưu trữ dữ liệu an toàn trên cơ sở dữ liệu</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Xuất dữ liệu ra tệp Excel (kèm hình ảnh)</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Sửa và xóa thông tin nhân viên</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Giao diện thân thiện trên các thiết bị di động</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
