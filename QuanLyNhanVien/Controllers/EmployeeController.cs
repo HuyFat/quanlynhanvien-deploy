@@ -34,14 +34,14 @@ public class EmployeeController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(Employee emp, IFormFile? imageFile)
     {
-        emp.Ngay = DateTime.Now;
+        emp.Ngay = DateTime.UtcNow;
 
         // Xử lý upload hình ảnh
         if (imageFile != null && imageFile.Length > 0)
         {
             string fileName = Path.GetFileNameWithoutExtension(imageFile.FileName);
             string extension = Path.GetExtension(imageFile.FileName);
-            string newFileName = fileName + "_" + DateTime.Now.Ticks + extension;
+            string newFileName = fileName + "_" + DateTime.UtcNow.Ticks + extension;
             string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", newFileName);
 
             Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
@@ -88,14 +88,13 @@ public class EmployeeController : Controller
         existingEmployee.KhuVuc = emp.KhuVuc;
         existingEmployee.Latitude = emp.Latitude;
         existingEmployee.Longitude = emp.Longitude;
-        existingEmployee.Ngay = emp.Ngay;
-
+existingEmployee.Ngay = DateTime.SpecifyKind(emp.Ngay, DateTimeKind.Utc);
         // Xử lý upload hình ảnh mới
         if (imageFile != null && imageFile.Length > 0)
         {
             string fileName = Path.GetFileNameWithoutExtension(imageFile.FileName);
             string extension = Path.GetExtension(imageFile.FileName);
-            string newFileName = fileName + "_" + DateTime.Now.Ticks + extension;
+            string newFileName = fileName + "_" + DateTime.UtcNow.Ticks + extension;
             string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", newFileName);
 
             Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
@@ -108,6 +107,7 @@ public class EmployeeController : Controller
             existingEmployee.ImagePath = "/uploads/" + newFileName;
         }
 
+        
         _context.Update(existingEmployee);
         _context.SaveChanges();
 
@@ -200,7 +200,7 @@ public class EmployeeController : Controller
             worksheet.Column(5).Width = 30;
             worksheet.Column(6).Width = 15;
 
-            var fileName = $"DanhSachNhanVien_{DateTime.Now:ddMMyyyy_HHmmss}.xlsx";
+            var fileName = $"DanhSachNhanVien_{DateTime.UtcNow:ddMMyyyy_HHmmss}.xlsx";
             var fileBytes = package.GetAsByteArray();
             return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }

@@ -58,16 +58,13 @@ app.UseMiddleware<QuanLyNhanVien.Middleware.MobileAccessMiddleware>();
 // ==========================
 // Static Assets (.NET 9)
 // ==========================
-app.MapStaticAssets();
 
 // ==========================
 // MVC Route
 // ==========================
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Employee}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Employee}/{action=Index}/{id?}");
 // ==========================
 // SignalR Hub
 // ==========================

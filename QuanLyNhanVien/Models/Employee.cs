@@ -1,8 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace QuanLyNhanVien.Models;
 
 public class Employee
 {
-    public int Id { get; set; }
+    [Key]
+[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+public int Id { get; set; }
     public required string HoTen { get; set; }
     public required string MaNhanVien { get; set; }
     public string? GhiChu { get; set; }
