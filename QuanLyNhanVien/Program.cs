@@ -30,10 +30,26 @@ builder.Services.AddSignalR();
 var app = builder.Build();
 
 // ==========================
+// AUTO MIGRATION DATABASE
+// ==========================
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
+// ==========================
 // Configure pipeline
 // ==========================
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    // HIỆN LỖI THẬT TRÊN RENDER
+    app.UseDeveloperExceptionPage();
+
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
@@ -56,15 +72,12 @@ app.UseAuthorization();
 app.UseMiddleware<QuanLyNhanVien.Middleware.MobileAccessMiddleware>();
 
 // ==========================
-// Static Assets (.NET 9)
-// ==========================
-
-// ==========================
 // MVC Route
 // ==========================
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Employee}/{action=Index}/{id?}");
+
 // ==========================
 // SignalR Hub
 // ==========================
