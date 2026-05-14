@@ -3,140 +3,64 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Quản lý Nhân viên</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <title>@ViewData["Title"] - QuanLyNhanVien</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/QuanLyNhanVien.styles.css" asp-append-version="true" />
-    <style>
-        .navbar {
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        }
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.3rem;
-        }
 
-        footer {
-            margin-top: 3rem;
-            padding: 2rem 0;
-            background-color: #f8f9fa;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-people-fill"></i> Quản lý Nhân viên
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-md-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i class="bi bi-house"></i> Trang chủ
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Employee" asp-action="Index">
-                                <i class="bi bi-list-ul"></i> Danh sách
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Employee" asp-action="Create">
-                                <i class="bi bi-plus-circle"></i> Thêm mới
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+
+    <nav class="navbar navbar-expand-lg custom-navbar shadow-sm">
+        <div class="container">
+
+            <a class="navbar-brand fw-bold text-white" href="/Employee">
+                QuanLyNhanVien
+            </a>
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/Employee">
+                            Danh sách
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/Employee/Create">
+                            Thêm nhân viên
+                        </a>
+                    </li>
+
+                </ul>
+
             </div>
-        </nav>
-    </header>
-    <main>
-        <div class="container py-4 page-content">
-            @RenderBody()
         </div>
-    </main>
+    </nav>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <div class="container py-4">
+        @RenderBody()
+    </div>
 
-    <!-- SignalR script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Connect to SignalR hub
-            const connection = new signalR.HubConnectionBuilder()
-                .withUrl("/notificationHub")
-                .build();
+    <script src="~/lib/jquery/jquery.min.js"></script>
 
-            connection.on("ReceiveMobileAccess", function (message) {
-                // Show browser notification
-                if (Notification.permission === "granted") {
-                    new Notification("📱 Mobile Access Detected", {
-                        body: message,
-                        icon: "/favicon.ico"
-                    });
-                } else if (Notification.permission !== "denied") {
-                    Notification.requestPermission().then(function (permission) {
-                        if (permission === "granted") {
-                            new Notification("📱 Mobile Access Detected", {
-                                body: message,
-                                icon: "/favicon.ico"
-                            });
-                        }
-                    });
-                }
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-                // Also show toast notification
-                showToast("📱 Mobile Access", message, "info");
-            });
-
-            connection.start().catch(function (err) {
-                console.error(err.toString());
-            });
-
-            // Request notification permission on page load
-            if (Notification.permission === "default") {
-                Notification.requestPermission();
-            }
-        });
-
-        function showToast(title, message, type = "info") {
-            const toastHtml = `
-                <div class="toast align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            <strong>${title}</strong><br>${message}
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                </div>
-            `;
-
-            const toastContainer = document.createElement("div");
-            toastContainer.className = "toast-container position-fixed top-0 end-0 p-3";
-            toastContainer.style.zIndex = "9999";
-            toastContainer.innerHTML = toastHtml;
-
-            document.body.appendChild(toastContainer);
-
-            const toastElement = toastContainer.querySelector('.toast');
-            const toast = new bootstrap.Toast(toastElement);
-            toast.show();
-
-            // Remove toast after it's hidden
-            toastElement.addEventListener('hidden.bs.toast', function () {
-                toastContainer.remove();
-            });
-        }
-    </script>
 </body>
 </html>
