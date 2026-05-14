@@ -6,9 +6,17 @@
         Danh sách nhân viên
     </h2>
 
-    <a asp-action="Create" class="btn btn-primary">
-        + Thêm nhân viên
-    </a>
+    <div class="d-flex gap-2">
+
+        <a asp-action="Create" class="btn btn-primary">
+            + Thêm nhân viên
+        </a>
+
+        <a asp-action="ExportExcel" class="btn btn-success">
+            Xuất Excel
+        </a>
+
+    </div>
 
 </div>
 
@@ -22,6 +30,7 @@
                 <th>Mã NV</th>
                 <th>Khu vực</th>
                 <th>Ngày</th>
+                <th>Ghi chú</th>
                 <th>Hành động</th>
             </tr>
         </thead>
@@ -40,21 +49,27 @@
 
                     <td>@item.Ngay.ToString("dd/MM/yyyy")</td>
 
+                    <td>@item.GhiChu</td>
+
                     <td>
 
-                        <a asp-action="Edit"
-                           asp-route-id="@item.Id"
-                           class="btn btn-warning btn-sm">
+                        <div class="d-flex gap-2">
 
-                            Sửa
-                        </a>
+                            <a asp-action="Edit"
+                               asp-route-id="@item.Id"
+                               class="btn btn-warning btn-sm">
 
-                        <a asp-action="Delete"
-                           asp-route-id="@item.Id"
-                           class="btn btn-danger btn-sm">
+                                Sửa
+                            </a>
 
-                            Xóa
-                        </a>
+                            <a asp-action="Delete"
+                               asp-route-id="@item.Id"
+                               class="btn btn-danger btn-sm">
+
+                                Xóa
+                            </a>
+
+                        </div>
 
                     </td>
 
