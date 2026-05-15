@@ -20,12 +20,20 @@ public class EmployeeController : Controller
         _hubContext = hubContext;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(string searchString)
+{
+    var employees = _context.Employees.AsQueryable();
+
+    // Tìm kiếm theo Họ tên hoặc Mã nhân viên
+    if (!string.IsNullOrEmpty(searchString))
     {
-        var employees = _context.Employees.ToList();
-        return View(employees);
+        employees = employees.Where(e =>
+            e.HoTen.Contains(searchString) ||
+            e.MaNhanVien.Contains(searchString));
     }
 
+    return View(employees.ToList());
+}
     public IActionResult Create()
     {
         return View();
