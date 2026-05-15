@@ -56,8 +56,15 @@ body {
     background: white;
 }
 
-.table thead {
+.table thead th {
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border: none;
+    padding: 16px;
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+    text-align: center;
 }
 
 .table thead th {
@@ -173,13 +180,8 @@ h3 {
         min-width: 950px;
     }
 
-    .table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    }
+   
 
-    
 
     h1,
     h2,
