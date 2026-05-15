@@ -1,11 +1,10 @@
-```css
 body {
     background: #f4f7fb;
     font-family: 'Poppins', sans-serif;
     color: #1e293b;
 }
 
-/* FIX TRÀN MOBILE */
+/* FIX MOBILE */
 
 html,
 body {
@@ -22,6 +21,7 @@ body {
 .navbar-brand {
     font-size: 24px;
     color: white !important;
+    font-weight: 700;
 }
 
 .nav-link {
@@ -38,9 +38,10 @@ body {
 
 .card {
     border: none;
-    border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-radius: 20px;
+    overflow: hidden;
     background: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 /* TABLE */
@@ -51,27 +52,41 @@ body {
 }
 
 .table {
-    border-radius: 14px;
-    overflow: hidden;
-    background: white;
     margin-bottom: 0;
+    background: white;
 }
 
 .table thead {
-    background: #2563eb;
-    color: white;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
 }
 
-.table th {
+.table thead th {
+    color: white;
     border: none;
     padding: 16px;
+    font-size: 14px;
+    font-weight: 600;
     white-space: nowrap;
 }
 
-.table td {
+.table tbody td {
+    padding: 16px;
     vertical-align: middle;
-    padding: 14px;
+    border-bottom: 1px solid #e5e7eb;
     white-space: nowrap;
+}
+
+.table tbody tr:hover {
+    background: #f8fafc;
+    transition: 0.2s;
+}
+
+/* BADGE */
+
+.badge {
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 13px;
 }
 
 /* BUTTON */
@@ -97,6 +112,7 @@ body {
 
 .btn-warning {
     color: white;
+    border: none;
 }
 
 /* FORM */
@@ -126,7 +142,7 @@ h3 {
     font-weight: 700;
 }
 
-/* MOBILE RESPONSIVE */
+/* MOBILE */
 
 @media (max-width: 768px) {
 
@@ -149,19 +165,12 @@ h3 {
     }
 
     .card {
-        border-radius: 14px;
-        padding: 10px;
+        border-radius: 16px;
     }
 
     .table {
         font-size: 13px;
-        min-width: 700px;
-    }
-
-    .btn {
-        width: 100%;
-        margin-bottom: 8px;
-        font-size: 14px;
+        min-width: 850px;
     }
 
     h1,
@@ -174,8 +183,9 @@ h3 {
         font-size: 16px;
     }
 
-    .table-responsive {
-    overflow-x: auto;
-}
-}
+    /* chỉ nút ngoài table full width */
 
+    .d-flex > .btn {
+        width: auto;
+    }
+}
