@@ -390,11 +390,9 @@ Program.cs
   System.Xml.XPath.XDocument.dll
   WindowsBase.dll
  microsoft.win32.systemevents/7.0.0/lib/net7.0/Microsoft.Win32.SystemEvents.dll
- newtonsoft.json/11.0.2/lib/netstandard2.0/Newtonsoft.Json.dll
  npgsql.entityframeworkcore.postgresql/8.0.4/lib/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
  npgsql/8.0.4/lib/net8.0/Npgsql.dll
  system.drawing.common/7.0.0/lib/net7.0/System.Drawing.Common.dll
- system.net.websockets.websocketprotocol/5.1.0/lib/net6.0/System.Net.WebSockets.WebSocketProtocol.dll
  system.security.cryptography.pkcs/8.0.0/lib/net8.0/System.Security.Cryptography.Pkcs.dll
 
 [analyzerReferences]
