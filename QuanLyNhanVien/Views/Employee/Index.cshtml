@@ -3,7 +3,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
 
     <div>
-
         <h2 class="fw-bold mb-1">
             Danh sách nhân viên
         </h2>
@@ -11,6 +10,17 @@
         <p class="text-muted mb-0">
             Quản lý thông tin nhân viên
         </p>
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap">
+
+        <a asp-action="Create" class="btn btn-primary">
+            + Thêm thông tin
+        </a>
+
+        <a asp-action="ExportExcel" class="btn btn-success">
+            Xuất Excel
+        </a>
 
     </div>
 
@@ -18,72 +28,76 @@
 
 <!-- FORM TÌM KIẾM -->
 
-<div class="card p-3 mb-4 shadow-sm border-0">
+<div class="card shadow-sm border-0 mb-4">
 
-    <form asp-action="Index"
-      method="get"
-      class="row g-3 align-items-end mb-4">
+    <div class="card-body">
 
-    <!-- KHU VỰC -->
+        <form asp-action="Index"
+              method="get"
+              class="row g-3 align-items-end">
 
-    <div class="col-lg-4 col-md-6">
+            <!-- KHU VỰC -->
 
-        <label class="form-label fw-semibold">
-            Chọn khu vực
-        </label>
+            <div class="col-md-4">
 
-        <select name="khuVuc"
-                class="form-select"
-                id="khuVucSelect">
+                <label class="form-label fw-semibold">
+                    Chọn khu vực
+                </label>
 
-            <option value="">-- Chọn khu vực --</option>
+                <select name="khuVuc"
+                        class="form-select"
+                        onchange="toggleSearch()"
+                        id="khuVucSelect">
 
-            <option value="Tổ Bình Đông">Tổ Bình Đông</option>
-            <option value="Tổ Bình Tây">Tổ Bình Tây</option>
-            <option value="Tổ Chánh Hưng 1">Tổ Chánh Hưng 1</option>
-            <option value="Tổ Chánh Hưng 2">Tổ Chánh Hưng 2</option>
-            <option value="Tổ Chợ Lớn">Tổ Chợ Lớn</option>
-            <option value="Tổ Minh Phụng">Tổ Minh Phụng</option>
-            <option value="Tổ Phú Định">Tổ Phú Định</option>
-            <option value="Tổ Phú Thọ">Tổ Phú Thọ</option>
+                    <option value="">-- Chọn khu vực --</option>
 
-        </select>
+                    <option value="Tổ Bình Đông">Tổ Bình Đông</option>
+                    <option value="Tổ Bình Tây">Tổ Bình Tây</option>
+                    <option value="Tổ Chánh Hưng 1">Tổ Chánh Hưng 1</option>
+                    <option value="Tổ Chánh Hưng 2">Tổ Chánh Hưng 2</option>
+                    <option value="Tổ Chợ Lớn">Tổ Chợ Lớn</option>
+                    <option value="Tổ Minh Phụng">Tổ Minh Phụng</option>
+                    <option value="Tổ Phú Định">Tổ Phú Định</option>
+                    <option value="Tổ Phú Thọ">Tổ Phú Thọ</option>
+
+                </select>
+
+            </div>
+
+            <!-- TÌM KIẾM -->
+
+            <div class="col-md-4">
+
+                <label class="form-label fw-semibold">
+                    Tìm theo tên hoặc mã NV
+                </label>
+
+                <input type="text"
+                       name="searchString"
+                       id="searchInput"
+                       value="@Context.Request.Query["searchString"]"
+                       class="form-control"
+                       placeholder="Nhập tên hoặc mã NV..." />
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <div class="col-md-4 d-flex gap-2 flex-wrap">
+
+                <button type="submit" class="btn btn-dark">
+                    🔍 Tìm kiếm
+                </button>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    Reset
+                </a>
+
+            </div>
+
+        </form>
 
     </div>
-
-    <!-- TÌM KIẾM -->
-
-    <div class="col-lg-4 col-md-6">
-
-        <label class="form-label fw-semibold">
-            Tìm kiếm nhân viên
-        </label>
-
-        <input type="text"
-               id="searchInput"
-               name="searchString"
-               value="@Context.Request.Query["searchString"]"
-               class="form-control"
-               placeholder="Nhập tên hoặc mã nhân viên..."
-               disabled />
-
-    </div>
-
-    <!-- BUTTON -->
-
-    <div class="col-lg-4 d-flex gap-2 flex-wrap">
-
-        <button type="submit" class="btn btn-dark">
-            🔍 Tìm kiếm
-        </button>
-
-        <a asp-action="Index" class="btn btn-secondary">
-            Reset
-        </a>
-
-    </div>
-
-</form>
 
 </div>
 
@@ -121,10 +135,9 @@
                 {
                     <tr>
 
-                        <td colspan="7"
-                            class="text-center py-4 text-muted">
+                        <td colspan="7" class="text-center py-4 text-muted">
 
-                            Không tìm thấy nhân viên nào
+                            Không tìm thấy nhân viên
 
                         </td>
 
@@ -141,19 +154,15 @@
                             </td>
 
                             <td>
-
                                 <div class="fw-semibold">
                                     @item.HoTen
                                 </div>
-
                             </td>
 
                             <td>
-
                                 <span class="badge bg-primary">
                                     @item.MaNhanVien
                                 </span>
-
                             </td>
 
                             <td>
@@ -177,7 +186,6 @@
                                        class="btn btn-warning btn-sm px-3">
 
                                         Sửa
-
                                     </a>
 
                                     <a asp-action="Delete"
@@ -185,7 +193,6 @@
                                        class="btn btn-danger btn-sm px-3">
 
                                         Xóa
-
                                     </a>
 
                                 </div>
@@ -203,29 +210,37 @@
         </table>
 
     </div>
+
+</div>
+
 @section Scripts{
 
 <script>
 
-    const khuVucSelect = document.getElementById("khuVucSelect");
-    const searchInput = document.getElementById("searchInput");
-
     function toggleSearch() {
 
-        if (khuVucSelect.value !== "") {
-            searchInput.disabled = false;
-        }
-        else {
+        var khuVuc = document.getElementById("khuVucSelect").value;
+
+        var searchInput = document.getElementById("searchInput");
+
+        if (khuVuc === "") {
+
             searchInput.disabled = true;
             searchInput.value = "";
+
+        } else {
+
+            searchInput.disabled = false;
+
         }
     }
 
-    khuVucSelect.addEventListener("change", toggleSearch);
+    window.onload = function () {
 
-    toggleSearch();
+        toggleSearch();
+
+    };
 
 </script>
 
 }
-</div>
