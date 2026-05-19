@@ -20,11 +20,11 @@ public class EmployeeController : Controller
         _hubContext = hubContext;
     }
 
-    public IActionResult Index(string searchString)
+  public IActionResult Index(string searchString)
 {
-    var employees = _context.Employees.AsQueryable();
+    var employees = from e in _context.Employees
+                    select e;
 
-    // Tìm kiếm theo Họ tên hoặc Mã nhân viên
     if (!string.IsNullOrEmpty(searchString))
     {
         employees = employees.Where(e =>
@@ -32,8 +32,11 @@ public class EmployeeController : Controller
             e.MaNhanVien.Contains(searchString));
     }
 
+    ViewData["CurrentFilter"] = searchString;
+
     return View(employees.ToList());
 }
+    
     public IActionResult Create()
     {
         return View();

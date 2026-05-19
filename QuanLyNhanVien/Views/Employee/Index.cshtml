@@ -14,21 +14,24 @@
 
     <div class="d-flex gap-2 flex-wrap align-items-center">
 
-    <form asp-action="Index" method="get" class="d-flex gap-2 flex-wrap">
+   <form asp-action="Index" method="get" class="d-flex gap-2 flex-wrap align-items-center">
 
-        <input type="text"
-               name="searchString"
-               value="@Context.Request.Query["searchString"]"
-               class="form-control"
-               placeholder="Tìm Họ tên hoặc Mã NV..."
-               style="min-width: 240px;" />
+    <input type="text"
+           name="searchString"
+           value="@Context.Request.Query["searchString"]"
+           class="form-control"
+           placeholder="Tìm theo tên hoặc mã nhân viên..."
+           style="min-width: 260px; max-width:100%;" />
 
-        <button type="submit" class="btn btn-dark">
-            Tìm
-        </button>
+    <button type="submit" class="btn btn-dark">
+        🔍 Tìm kiếm
+    </button>
 
-    </form>
+    <a asp-action="Index" class="btn btn-secondary">
+        Reset
+    </a>
 
+</form>
     <a asp-action="Create" class="btn btn-primary">
         + Thêm thông tin
     </a>
@@ -67,70 +70,85 @@
 
                 <tbody>
 
-                    @{
-                        int stt = 1;
-                    }
+    @{
+        int stt = 1;
+    }
 
-                    @foreach (var item in Model)
-                    {
-                        <tr>
+    @if (!Model.Any())
+    {
+        <tr>
 
-                            <td class="fw-semibold">
-                                @stt
-                            </td>
+            <td colspan="7" class="text-center py-4 text-muted">
 
-                            <td>
-                                <div class="fw-semibold">
-                                    @item.HoTen
-                                </div>
-                            </td>
+                Không tìm thấy nhân viên nào
 
-                            <td>
-                                <span class="badge bg-primary">
-                                    @item.MaNhanVien
-                                </span>
-                            </td>
+            </td>
 
-                            <td>
-                                @item.KhuVuc
-                            </td>
+        </tr>
+    }
+    else
+    {
+        @foreach (var item in Model)
+        {
+            <tr>
 
-                            <td>
-                                @item.Ngay.ToString("dd/MM/yyyy")
-                            </td>
+                <td class="fw-semibold">
+                    @stt
+                </td>
 
-                            <td class="text-muted">
-                                @item.GhiChu
-                            </td>
+                <td>
+                    <div class="fw-semibold">
+                        @item.HoTen
+                    </div>
+                </td>
 
-                            <td>
+                <td>
+                    <span class="badge bg-primary">
+                        @item.MaNhanVien
+                    </span>
+                </td>
 
-                                <div class="d-flex gap-2 justify-content-center flex-wrap">
+                <td>
+                    @item.KhuVuc
+                </td>
 
-                                    <a asp-action="Edit"
-                                       asp-route-id="@item.Id"
-                                       class="btn btn-warning btn-sm px-3">
+                <td>
+                    @item.Ngay.ToString("dd/MM/yyyy")
+                </td>
 
-                                        Sửa
-                                    </a>
+                <td class="text-muted">
+                    @item.GhiChu
+                </td>
 
-                                    <a asp-action="Delete"
-                                       asp-route-id="@item.Id"
-                                       class="btn btn-danger btn-sm px-3">
+                <td>
 
-                                        Xóa
-                                    </a>
+                    <div class="d-flex gap-2 justify-content-center flex-wrap">
 
-                                </div>
+                        <a asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="btn btn-warning btn-sm px-3">
 
-                            </td>
+                            Sửa
+                        </a>
 
-                        </tr>
+                        <a asp-action="Delete"
+                           asp-route-id="@item.Id"
+                           class="btn btn-danger btn-sm px-3">
 
-                        stt++;
-                    }
+                            Xóa
+                        </a>
 
-                </tbody>
+                    </div>
+
+                </td>
+
+            </tr>
+
+            stt++;
+        }
+    }
+
+</tbody>
 
             </table>
 
