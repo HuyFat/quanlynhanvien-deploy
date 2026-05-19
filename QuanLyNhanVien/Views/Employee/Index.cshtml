@@ -21,113 +21,69 @@
 <div class="card p-3 mb-4 shadow-sm border-0">
 
     <form asp-action="Index"
-          method="get"
-          class="row g-3 align-items-end">
+      method="get"
+      class="row g-3 align-items-end mb-4">
 
-        <!-- CHỌN KHU VỰC -->
+    <!-- KHU VỰC -->
 
-        <div class="col-md-4">
+    <div class="col-lg-4 col-md-6">
 
-            <label class="form-label fw-semibold">
-                Chọn khu vực
-            </label>
+        <label class="form-label fw-semibold">
+            Chọn khu vực
+        </label>
 
-            <select name="khuVuc" class="form-select">
+        <select name="khuVuc"
+                class="form-select"
+                id="khuVucSelect">
 
-    <option value="" disabled selected>
-        -- Chọn khu vực --
-    </option>
+            <option value="">-- Chọn khu vực --</option>
 
-    <option value="Tổ Bình Đông">
-        Tổ Bình Đông
-    </option>
+            <option value="Tổ Bình Đông">Tổ Bình Đông</option>
+            <option value="Tổ Bình Tây">Tổ Bình Tây</option>
+            <option value="Tổ Chánh Hưng 1">Tổ Chánh Hưng 1</option>
+            <option value="Tổ Chánh Hưng 2">Tổ Chánh Hưng 2</option>
+            <option value="Tổ Chợ Lớn">Tổ Chợ Lớn</option>
+            <option value="Tổ Minh Phụng">Tổ Minh Phụng</option>
+            <option value="Tổ Phú Định">Tổ Phú Định</option>
+            <option value="Tổ Phú Thọ">Tổ Phú Thọ</option>
 
-    <option value="Tổ Bình Tây">
-        Tổ Bình Tây
-    </option>
+        </select>
 
-    <option value="Tổ Chánh Hưng 1">
-        Tổ Chánh Hưng 1
-    </option>
+    </div>
 
-    <option value="Tổ Chánh Hưng 2">
-        Tổ Chánh Hưng 2
-    </option>
+    <!-- TÌM KIẾM -->
 
-    <option value="Tổ Chợ Lớn">
-        Tổ Chợ Lớn
-    </option>
+    <div class="col-lg-4 col-md-6">
 
-    <option value="Tổ Minh Phụng">
-        Tổ Minh Phụng
-    </option>
+        <label class="form-label fw-semibold">
+            Tìm kiếm nhân viên
+        </label>
 
-    <option value="Tổ Phú Định">
-        Tổ Phú Định
-    </option>
+        <input type="text"
+               id="searchInput"
+               name="searchString"
+               value="@Context.Request.Query["searchString"]"
+               class="form-control"
+               placeholder="Nhập tên hoặc mã nhân viên..."
+               disabled />
 
-    <option value="Tổ Phú Thọ">
-        Tổ Phú Thọ
-    </option>
+    </div>
 
-</select>
+    <!-- BUTTON -->
 
-        </div>
+    <div class="col-lg-4 d-flex gap-2 flex-wrap">
 
-        <!-- TÌM THEO TÊN HOẶC MÃ -->
+        <button type="submit" class="btn btn-dark">
+            🔍 Tìm kiếm
+        </button>
 
-        <div class="col-md-4">
+        <a asp-action="Index" class="btn btn-secondary">
+            Reset
+        </a>
 
-            <label class="form-label fw-semibold">
-                Tìm theo tên hoặc mã NV
-            </label>
+    </div>
 
-            <input type="text"
-                   name="searchString"
-                   value="@Context.Request.Query["searchString"]"
-                   class="form-control"
-                   placeholder="Nhập tên hoặc mã NV..."
-                   @(string.IsNullOrEmpty(Context.Request.Query["khuVuc"])
-                        ? "disabled"
-                        : "") />
-
-        </div>
-
-        <!-- BUTTON -->
-
-        <div class="col-md-4 d-flex gap-2 flex-wrap">
-
-            <button type="submit"
-                    class="btn btn-dark">
-
-                🔍 Tìm kiếm
-
-            </button>
-
-            <a asp-action="Index"
-               class="btn btn-secondary">
-
-                Reset
-
-            </a>
-
-            <a asp-action="Create"
-               class="btn btn-primary">
-
-                + Thêm thông tin
-
-            </a>
-
-            <a asp-action="ExportExcel"
-               class="btn btn-success">
-
-                Xuất Excel
-
-            </a>
-
-        </div>
-
-    </form>
+</form>
 
 </div>
 
@@ -247,5 +203,29 @@
         </table>
 
     </div>
+@section Scripts{
 
+<script>
+
+    const khuVucSelect = document.getElementById("khuVucSelect");
+    const searchInput = document.getElementById("searchInput");
+
+    function toggleSearch() {
+
+        if (khuVucSelect.value !== "") {
+            searchInput.disabled = false;
+        }
+        else {
+            searchInput.disabled = true;
+            searchInput.value = "";
+        }
+    }
+
+    khuVucSelect.addEventListener("change", toggleSearch);
+
+    toggleSearch();
+
+</script>
+
+}
 </div>
