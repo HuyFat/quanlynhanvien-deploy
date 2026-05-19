@@ -20,23 +20,26 @@ public class EmployeeController : Controller
         _hubContext = hubContext;
     }
 
-  public IActionResult Index(string searchString)
+  public IActionResult Index(string searchString, string khuVuc)
 {
-    var employees = from e in _context.Employees
-                    select e;
+    var employees = _context.Employees.AsQueryable();
 
-    if (!string.IsNullOrEmpty(searchString))
+    // Lọc theo khu vực trước
+    if (!string.IsNullOrEmpty(khuVuc))
     {
-        employees = employees.Where(e =>
-            e.HoTen.Contains(searchString) ||
-            e.MaNhanVien.Contains(searchString));
-    }
+        employees = employees.Where(x => x.KhuVuc == khuVuc);
 
-    ViewData["CurrentFilter"] = searchString;
+        // Chỉ tìm kiếm khi đã chọn khu vực
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            employees = employees.Where(x =>
+                x.HoTen.Contains(searchString) ||
+                x.MaNhanVien.Contains(searchString));
+        }
+    }
 
     return View(employees.ToList());
 }
-    
     public IActionResult Create()
     {
         return View();

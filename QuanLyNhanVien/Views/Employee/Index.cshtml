@@ -3,156 +3,223 @@
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
 
     <div>
+
         <h2 class="fw-bold mb-1">
-            Danh sách 
+            Danh sách nhân viên
         </h2>
 
         <p class="text-muted mb-0">
-            Quản lý thông tin
+            Quản lý thông tin nhân viên
         </p>
+
     </div>
 
-    <div class="d-flex gap-2 flex-wrap align-items-center">
+</div>
 
-   <form asp-action="Index" method="get" class="d-flex gap-2 flex-wrap align-items-center">
+<!-- FORM TÌM KIẾM -->
 
-    <input type="text"
-           name="searchString"
-           value="@Context.Request.Query["searchString"]"
-           class="form-control"
-           placeholder="Tìm theo tên hoặc mã khách hàng..."
-           style="min-width: 260px; max-width:100%;" />
+<div class="card p-3 mb-4 shadow-sm border-0">
 
-    <button type="submit" class="btn btn-dark">
-        🔍 Tìm kiếm
-    </button>
+    <form asp-action="Index"
+          method="get"
+          class="row g-3 align-items-end">
 
-    <a asp-action="Index" class="btn btn-secondary">
-        Reset
-    </a>
+        <!-- CHỌN KHU VỰC -->
 
-</form>
-    <a asp-action="Create" class="btn btn-primary">
-        + Thêm thông tin
-    </a>
+        <div class="col-md-4">
 
-    <a asp-action="ExportExcel" class="btn btn-success">
-        Xuất Excel
-    </a>
+            <label class="form-label fw-semibold">
+                Chọn khu vực
+            </label>
+
+            <select name="khuVuc" class="form-select">
+
+                <option value="">-- Chọn khu vực --</option>
+
+                <option value="Q4">Q4</option>
+                <option value="Q5">Q5</option>
+                <option value="Q7">Q7</option>
+                <option value="Nhà Bè">Nhà Bè</option>
+                <option value="Cần Giờ">Cần Giờ</option>
+                <option value="Bình Chánh">Bình Chánh</option>
+                <option value="Đội 1">Đội 1</option>
+                <option value="Đội 2">Đội 2</option>
+
+            </select>
+
+        </div>
+
+        <!-- TÌM THEO TÊN HOẶC MÃ -->
+
+        <div class="col-md-4">
+
+            <label class="form-label fw-semibold">
+                Tìm theo tên hoặc mã NV
+            </label>
+
+            <input type="text"
+                   name="searchString"
+                   value="@Context.Request.Query["searchString"]"
+                   class="form-control"
+                   placeholder="Nhập tên hoặc mã NV..."
+                   @(string.IsNullOrEmpty(Context.Request.Query["khuVuc"])
+                        ? "disabled"
+                        : "") />
+
+        </div>
+
+        <!-- BUTTON -->
+
+        <div class="col-md-4 d-flex gap-2 flex-wrap">
+
+            <button type="submit"
+                    class="btn btn-dark">
+
+                🔍 Tìm kiếm
+
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+
+                Reset
+
+            </a>
+
+            <a asp-action="Create"
+               class="btn btn-primary">
+
+                + Thêm thông tin
+
+            </a>
+
+            <a asp-action="ExportExcel"
+               class="btn btn-success">
+
+                Xuất Excel
+
+            </a>
+
+        </div>
+
+    </form>
 
 </div>
 
-</div>
+<!-- TABLE -->
 
 <div class="card shadow-lg border-0 table-responsive">
 
     <div class="card-body p-0">
 
-        
+        <table class="table custom-table align-middle mb-0">
 
-            <table class="table custom-table align-middle mb-0">
+            <thead>
 
-                <thead>
+                <tr>
 
+                    <th>STT</th>
+                    <th>Họ tên</th>
+                    <th>Mã NV</th>
+                    <th>Khu vực</th>
+                    <th>Ngày</th>
+                    <th>Ghi chú</th>
+                    <th class="text-center">Hành động</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @{
+                    int stt = 1;
+                }
+
+                @if (!Model.Any())
+                {
                     <tr>
 
-                        <th>STT</th>
-                        <th>Họ tên</th>
-                        <th>Mã NV</th>
-                        <th>Khu vực</th>
-                        <th>Ngày</th>
-                        <th>Ghi chú</th>
-                        <th class="text-center">Hành động</th>
+                        <td colspan="7"
+                            class="text-center py-4 text-muted">
+
+                            Không tìm thấy nhân viên nào
+
+                        </td>
 
                     </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
 
-                </thead>
+                            <td class="fw-semibold">
+                                @stt
+                            </td>
 
-                <tbody>
+                            <td>
 
-    @{
-        int stt = 1;
-    }
+                                <div class="fw-semibold">
+                                    @item.HoTen
+                                </div>
 
-    @if (!Model.Any())
-    {
-        <tr>
+                            </td>
 
-            <td colspan="7" class="text-center py-4 text-muted">
+                            <td>
 
-                Không tìm thấy khách hàng nào
+                                <span class="badge bg-primary">
+                                    @item.MaNhanVien
+                                </span>
 
-            </td>
+                            </td>
 
-        </tr>
-    }
-    else
-    {
-        @foreach (var item in Model)
-        {
-            <tr>
+                            <td>
+                                @item.KhuVuc
+                            </td>
 
-                <td class="fw-semibold">
-                    @stt
-                </td>
+                            <td>
+                                @item.Ngay.ToString("dd/MM/yyyy")
+                            </td>
 
-                <td>
-                    <div class="fw-semibold">
-                        @item.HoTen
-                    </div>
-                </td>
+                            <td class="text-muted">
+                                @item.GhiChu
+                            </td>
 
-                <td>
-                    <span class="badge bg-primary">
-                        @item.MaNhanVien
-                    </span>
-                </td>
+                            <td>
 
-                <td>
-                    @item.KhuVuc
-                </td>
+                                <div class="d-flex gap-2 justify-content-center flex-wrap">
 
-                <td>
-                    @item.Ngay.ToString("dd/MM/yyyy")
-                </td>
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-warning btn-sm px-3">
 
-                <td class="text-muted">
-                    @item.GhiChu
-                </td>
+                                        Sửa
 
-                <td>
+                                    </a>
 
-                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-danger btn-sm px-3">
 
-                        <a asp-action="Edit"
-                           asp-route-id="@item.Id"
-                           class="btn btn-warning btn-sm px-3">
+                                        Xóa
 
-                            Sửa
-                        </a>
+                                    </a>
 
-                        <a asp-action="Delete"
-                           asp-route-id="@item.Id"
-                           class="btn btn-danger btn-sm px-3">
+                                </div>
 
-                            Xóa
-                        </a>
+                            </td>
 
-                    </div>
+                        </tr>
 
-                </td>
+                        stt++;
+                    }
+                }
 
-            </tr>
+            </tbody>
 
-            stt++;
-        }
-    }
-
-</tbody>
-
-            </table>
-
-        
+        </table>
 
     </div>
 
