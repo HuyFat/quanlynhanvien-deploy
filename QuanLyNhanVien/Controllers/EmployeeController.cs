@@ -24,18 +24,18 @@ public class EmployeeController : Controller
 {
     var employees = _context.Employees.AsQueryable();
 
-    // Lọc theo khu vực trước
+    // Lọc khu vực
     if (!string.IsNullOrEmpty(khuVuc))
     {
         employees = employees.Where(x => x.KhuVuc == khuVuc);
+    }
 
-        // Chỉ tìm kiếm khi đã chọn khu vực
-        if (!string.IsNullOrEmpty(searchString))
-        {
-            employees = employees.Where(x =>
-                x.HoTen.Contains(searchString) ||
-                x.MaNhanVien.Contains(searchString));
-        }
+    // Tìm theo tên hoặc mã NV
+    if (!string.IsNullOrEmpty(searchString))
+    {
+        employees = employees.Where(x =>
+            x.HoTen.Contains(searchString) ||
+            x.MaNhanVien.Contains(searchString));
     }
 
     return View(employees.ToList());
