@@ -9,13 +9,13 @@
             <form asp-action="Create" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="HoTen" class="form-label">Họ tên <span class="text-danger">*</span></label>
-            <input asp-for="HoTen" class="form-control" placeholder="Nhập họ tên nhân viên" required />
+            <input asp-for="HoTen" class="form-control" placeholder="Nhập họ tên khách hàng" required />
             <span asp-validation-for="HoTen" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label for="MaNhanVien" class="form-label">Mã nhân viên <span class="text-danger">*</span></label>
-            <input asp-for="MaNhanVien" class="form-control" placeholder="Nhập mã nhân viên" required />
+            <label for="MaNhanVien" class="form-label">Mã khách hàng <span class="text-danger">*</span></label>
+            <input asp-for="MaNhanVien" class="form-control" placeholder="Nhập mã khách hàng" required />
             <span asp-validation-for="MaNhanVien" class="text-danger"></span>
         </div>
 
