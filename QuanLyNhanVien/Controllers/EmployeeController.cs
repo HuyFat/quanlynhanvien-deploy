@@ -154,7 +154,7 @@ public class EmployeeController : Controller
         // NGÀY CHỈNH SỬA
 
         existingEmployee.NgayCapNhat =
-            DateTime.Now;
+            DateTime.Today;
 
         // upload ảnh mới
 
@@ -262,7 +262,7 @@ public class EmployeeController : Controller
             emp.Ngay.ToString("dd/MM/yyyy");
 
             worksheet.Cells[row,5].Value=
-            emp.NgayCapNhat?.ToString("dd/MM/yyyy HH:mm");
+            emp.NgayCapNhat?.ToString("dd/MM/yyyy");
 
             row++;
         }
