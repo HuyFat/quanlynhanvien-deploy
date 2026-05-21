@@ -57,7 +57,7 @@ public class EmployeeController : Controller
         IFormFile? imageFile)
     {
         // ngày tạo
-        emp.Ngay = DateTime.UtcNow;
+        emp.Ngay = DateTime.Now;
 
         // upload ảnh
         if (imageFile != null && imageFile.Length > 0)
@@ -70,7 +70,7 @@ public class EmployeeController : Controller
 
             string newFileName =
             fileName + "_" +
-            DateTime.UtcNow.Ticks +
+            DateTime.Now.Ticks +
             extension;
 
             string filePath =
@@ -154,7 +154,7 @@ public class EmployeeController : Controller
         // NGÀY CHỈNH SỬA
 
         existingEmployee.NgayCapNhat =
-            DateTime.UtcNow;
+            DateTime.Now;
 
         // upload ảnh mới
 
@@ -171,7 +171,7 @@ public class EmployeeController : Controller
 
             string newFileName =
             fileName + "_" +
-            DateTime.UtcNow.Ticks +
+            DateTime.Now.Ticks +
             extension;
 
             string filePath =
