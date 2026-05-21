@@ -57,7 +57,7 @@ public class EmployeeController : Controller
         IFormFile? imageFile)
     {
         // ngày tạo
-        emp.Ngay = DateTime.Now;
+        emp.Ngay = DateTime.Today;
 
         // upload ảnh
         if (imageFile != null && imageFile.Length > 0)
