@@ -150,10 +150,6 @@ public class EmployeeController : Controller
         existingEmployee.Longitude =
             emp.Longitude;
 
-        // GIỮ NGUYÊN NGÀY TẠO
-
-        existingEmployee.Ngay =
-            existingEmployee.Ngay;
 
         // NGÀY CHỈNH SỬA
 

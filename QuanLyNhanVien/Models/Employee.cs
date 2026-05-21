@@ -24,7 +24,7 @@ public class Employee
     // ngày tạo
     public DateTime Ngay { get; set; }
 
-    // ngày chỉnh sửa gần nhất
+    // ngày chỉnh sửa
     public DateTime? NgayCapNhat { get; set; }
 
     public string? ImagePath { get; set; }

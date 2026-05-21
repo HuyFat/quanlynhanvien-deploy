@@ -117,8 +117,9 @@
                     <th>Họ tên</th>
                     <th>Mã NV</th>
                     <th>Khu vực</th>
-                    <th>Ngày</th>
-                    <th>Ghi chú</th>
+                    <th>Ngày tạo</th>
+<th>Ngày sửa</th>
+<th>Ghi chú</th>
                     <th class="text-center">Hành động</th>
 
                 </tr>
@@ -170,12 +171,18 @@
                             </td>
 
                             <td>
-                                @item.Ngay.ToString("dd/MM/yyyy")
-                            </td>
+@item.Ngay.ToString("dd/MM/yyyy")
+</td>
 
-                            <td class="text-muted">
-                                @item.GhiChu
-                            </td>
+<td>
+@(item.NgayCapNhat.HasValue
+? item.NgayCapNhat.Value.ToString("dd/MM/yyyy HH:mm")
+: "Chưa sửa")
+</td>
+
+<td class="text-muted">
+@item.GhiChu
+</td>
 
                             <td>
 
