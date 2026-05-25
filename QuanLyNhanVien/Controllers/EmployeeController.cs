@@ -22,152 +22,56 @@ public class EmployeeController : Controller
     }
 
     // DANH SÁCH + TÌM KIẾM
-    public IActionResult Index(string searchString, string khuVuc)
-    {
-        var employees = _context.Employees.AsQueryable();
 
-        // Lọc khu vực
+    public IActionResult Index(
+        string searchString,
+        string khuVuc)
+    {
+        var employees =
+        _context.Employees.AsQueryable();
+
         if (!string.IsNullOrEmpty(khuVuc))
         {
-            employees = employees.Where(x =>
-                x.KhuVuc == khuVuc);
+            employees =
+            employees.Where(x =>
+            x.KhuVuc == khuVuc);
         }
 
-        // Tìm tên hoặc mã NV
         if (!string.IsNullOrEmpty(searchString))
         {
-            employees = employees.Where(x =>
-                x.HoTen.Contains(searchString) ||
-                x.MaNhanVien.Contains(searchString));
+            employees =
+            employees.Where(x =>
+            x.HoTen.Contains(searchString) ||
+            x.MaNhanVien.Contains(searchString));
         }
 
         return View(employees.ToList());
     }
 
-    // TRANG THÊM
+    // THÊM
+
     public IActionResult Create()
     {
         return View();
     }
 
-    // THÊM NHÂN VIÊN
     [HttpPost]
     public async Task<IActionResult> Create(
         Employee emp,
         IFormFile? imageFile)
     {
-        // ngày tạo
         emp.Ngay = DateTime.Today;
-
-        // upload ảnh
-        if (imageFile != null && imageFile.Length > 0)
-        {
-            string fileName =
-            Path.GetFileNameWithoutExtension(imageFile.FileName);
-
-            string extension =
-            Path.GetExtension(imageFile.FileName);
-
-            string newFileName =
-            fileName + "_" +
-            DateTime.Now.Ticks +
-            extension;
-
-            string filePath =
-            Path.Combine(
-                _webHostEnvironment.WebRootPath,
-                "uploads",
-                newFileName);
-
-            Directory.CreateDirectory(
-                Path.GetDirectoryName(filePath)!);
-
-            using (var stream =
-                   new FileStream(
-                       filePath,
-                       FileMode.Create))
-            {
-                await imageFile.CopyToAsync(stream);
-            }
-
-            emp.ImagePath = "/uploads/" + newFileName;
-        }
-
-        _context.Add(emp);
-
-        await _context.SaveChangesAsync();
-
-        await _hubContext.Clients.All.SendAsync(
-            "ReceiveNotification",
-            $"Đã thêm: {emp.HoTen}");
-
-        return RedirectToAction(nameof(Index));
-    }
-
-    // TRANG SỬA
-    public IActionResult Edit(int id)
-    {
-        var employee =
-            _context.Employees.Find(id);
-
-        if (employee == null)
-            return NotFound();
-
-        return View(employee);
-    }
-
-    // SỬA
-    [HttpPost]
-    public async Task<IActionResult> Edit(
-        int id,
-        Employee emp,
-        IFormFile? imageFile)
-    {
-        if (id != emp.Id)
-            return BadRequest();
-
-        var existingEmployee =
-            _context.Employees.Find(id);
-
-        if (existingEmployee == null)
-            return NotFound();
-
-        existingEmployee.HoTen =
-            emp.HoTen;
-
-        existingEmployee.MaNhanVien =
-            emp.MaNhanVien;
-
-        existingEmployee.GhiChu =
-            emp.GhiChu;
-
-        existingEmployee.KhuVuc =
-            emp.KhuVuc;
-
-        existingEmployee.Latitude =
-            emp.Latitude;
-
-        existingEmployee.Longitude =
-            emp.Longitude;
-
-
-        // NGÀY CHỈNH SỬA
-
-        existingEmployee.NgayCapNhat =
-            DateTime.Today;
-
-        // upload ảnh mới
 
         if (imageFile != null &&
             imageFile.Length > 0)
         {
             string fileName =
             Path.GetFileNameWithoutExtension(
-                imageFile.FileName);
+            imageFile.FileName);
 
             string extension =
             Path.GetExtension(
-                imageFile.FileName);
+            imageFile.FileName);
 
             string newFileName =
             fileName + "_" +
@@ -176,142 +80,255 @@ public class EmployeeController : Controller
 
             string filePath =
             Path.Combine(
-                _webHostEnvironment.WebRootPath,
-                "uploads",
-                newFileName);
+            _webHostEnvironment.WebRootPath,
+            "uploads",
+            newFileName);
 
             Directory.CreateDirectory(
-                Path.GetDirectoryName(filePath)!);
+            Path.GetDirectoryName(filePath)!);
 
-            using (var stream =
-                   new FileStream(
-                       filePath,
-                       FileMode.Create))
+            using(var stream =
+                  new FileStream(
+                  filePath,
+                  FileMode.Create))
             {
                 await imageFile.CopyToAsync(stream);
             }
 
-            existingEmployee.ImagePath =
-                "/uploads/" + newFileName;
+            emp.ImagePath =
+            "/uploads/" + newFileName;
+        }
+
+        _context.Add(emp);
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index");
+    }
+
+    // SỬA
+
+    public IActionResult Edit(int id)
+    {
+        var employee =
+        _context.Employees.Find(id);
+
+        if(employee==null)
+            return NotFound();
+
+        return View(employee);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(
+        int id,
+        Employee emp,
+        IFormFile? imageFile)
+    {
+        if(id!=emp.Id)
+            return BadRequest();
+
+        var existingEmployee =
+        _context.Employees.Find(id);
+
+        if(existingEmployee==null)
+            return NotFound();
+
+        existingEmployee.HoTen=
+        emp.HoTen;
+
+        existingEmployee.MaNhanVien=
+        emp.MaNhanVien;
+
+        existingEmployee.KhuVuc=
+        emp.KhuVuc;
+
+        existingEmployee.GhiChu=
+        emp.GhiChu;
+
+        existingEmployee.Latitude=
+        emp.Latitude;
+
+        existingEmployee.Longitude=
+        emp.Longitude;
+
+        existingEmployee.NgayCapNhat=
+        DateTime.Today;
+
+        // Chỉ thay ảnh khi chọn ảnh mới
+
+        if(imageFile!=null &&
+           imageFile.Length>0)
+        {
+            string fileName=
+            Path.GetFileNameWithoutExtension(
+            imageFile.FileName);
+
+            string extension=
+            Path.GetExtension(
+            imageFile.FileName);
+
+            string newFileName=
+            fileName+"_"+DateTime.Now.Ticks+
+            extension;
+
+            string filePath=
+            Path.Combine(
+            _webHostEnvironment.WebRootPath,
+            "uploads",
+            newFileName);
+
+            Directory.CreateDirectory(
+            Path.GetDirectoryName(filePath)!);
+
+            using(var stream=
+                  new FileStream(
+                  filePath,
+                  FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+
+            existingEmployee.ImagePath=
+            "/uploads/"+newFileName;
         }
 
         _context.Update(existingEmployee);
 
         await _context.SaveChangesAsync();
 
-        await _hubContext.Clients.All.SendAsync(
-            "ReceiveNotification",
-            $"Đã cập nhật: {existingEmployee.HoTen}");
-
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction("Index");
     }
 
     // XÓA
+
     public IActionResult Delete(int id)
     {
-        var employee =
-            _context.Employees.Find(id);
+        var employee=
+        _context.Employees.Find(id);
 
-        if (employee == null)
+        if(employee==null)
             return NotFound();
 
         return View(employee);
     }
 
-    [HttpPost, ActionName("Delete")]
-    public IActionResult DeleteConfirmed(int id)
+    [HttpPost,ActionName("Delete")]
+    public IActionResult DeleteConfirmed(
+        int id)
     {
-        var employee =
-            _context.Employees.Find(id);
+        var employee=
+        _context.Employees.Find(id);
 
-        if (employee != null)
+        if(employee!=null)
         {
             _context.Remove(employee);
             _context.SaveChanges();
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction("Index");
     }
 
-   public IActionResult ExportExcel()
-{
-    var employees = _context.Employees.ToList();
+    // XUẤT EXCEL
 
-    using var package = new ExcelPackage();
-
-    var worksheet =
-        package.Workbook.Worksheets.Add("NhanVien");
-
-    // Tiêu đề cột
-
-    worksheet.Cells[1,1].Value = "Họ tên";
-    worksheet.Cells[1,2].Value = "Mã NV";
-    worksheet.Cells[1,3].Value = "Khu vực";
-    worksheet.Cells[1,4].Value = "Ngày tạo";
-    worksheet.Cells[1,5].Value = "Ngày sửa";
-    worksheet.Cells[1,6].Value = "Hình ảnh";
-
-    int row = 2;
-
-    foreach(var emp in employees)
+    public IActionResult ExportExcel()
     {
-        worksheet.Cells[row,1].Value = emp.HoTen;
-        worksheet.Cells[row,2].Value = emp.MaNhanVien;
-        worksheet.Cells[row,3].Value = emp.KhuVuc;
+        var employees =
+        _context.Employees.ToList();
 
-        worksheet.Cells[row,4].Value =
-        emp.Ngay.ToString("dd/MM/yyyy");
+        using var package =
+        new ExcelPackage();
 
-        worksheet.Cells[row,5].Value =
-        emp.NgayCapNhat?.ToString("dd/MM/yyyy");
+        var worksheet =
+        package.Workbook.Worksheets
+        .Add("NhanVien");
 
-        // THÊM ẢNH VÀO EXCEL
+        worksheet.Cells[1,1].Value="Họ tên";
+        worksheet.Cells[1,2].Value="Mã NV";
+        worksheet.Cells[1,3].Value="Khu vực";
+        worksheet.Cells[1,4].Value="Ngày tạo";
+        worksheet.Cells[1,5].Value="Ngày sửa";
+        worksheet.Cells[1,6].Value="Hình";
 
-        if(!string.IsNullOrEmpty(emp.ImagePath))
+        int row=2;
+
+        foreach(var emp in employees)
         {
-            try
+            worksheet.Cells[row,1].Value=
+            emp.HoTen;
+
+            worksheet.Cells[row,2].Value=
+            emp.MaNhanVien;
+
+            worksheet.Cells[row,3].Value=
+            emp.KhuVuc;
+
+            worksheet.Cells[row,4].Value=
+            emp.Ngay.ToString("dd/MM/yyyy");
+
+            worksheet.Cells[row,5].Value=
+            emp.NgayCapNhat?.ToString("dd/MM/yyyy");
+
+            // ẢNH
+
+            if(!string.IsNullOrEmpty(
+               emp.ImagePath))
             {
-                string imagePath =
-                Path.Combine(
-                    _webHostEnvironment.WebRootPath,
-                    emp.ImagePath.TrimStart('/'));
-
-                if(System.IO.File.Exists(imagePath))
+                try
                 {
-                    worksheet.Row(row).Height = 55;
+                    string imagePath=
+                    Path.Combine(
+                    _webHostEnvironment.WebRootPath,
+                    emp.ImagePath
+                    .Replace("/", "\\")
+                    .TrimStart('\\'));
 
-                    var picture =
-                    worksheet.Drawings.AddPicture(
+                    if(System.IO.File.Exists(
+                       imagePath))
+                    {
+                        worksheet.Row(row)
+                        .Height=60;
+
+                        var picture=
+                        worksheet.Drawings
+                        .AddPicture(
                         $"Image_{emp.Id}",
                         new FileInfo(imagePath));
 
-                    picture.SetPosition(
-                        row - 1,
+                        picture.SetPosition(
+                        row-1,
                         5,
                         5,
                         5);
 
-                    picture.SetSize(60,60);
+                        picture.SetSize(
+                        60,
+                        60);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(
+                    ex.Message);
                 }
             }
-            catch{}
+
+            row++;
         }
 
-        row++;
-    }
+        worksheet.Column(1).Width=25;
+        worksheet.Column(2).Width=20;
+        worksheet.Column(3).Width=20;
+        worksheet.Column(4).Width=20;
+        worksheet.Column(5).Width=20;
+        worksheet.Column(6).Width=18;
 
-    worksheet.Column(1).Width=25;
-    worksheet.Column(2).Width=20;
-    worksheet.Column(3).Width=20;
-    worksheet.Column(4).Width=20;
-    worksheet.Column(5).Width=20;
-    worksheet.Column(6).Width=18;
+        var bytes=
+        package.GetAsByteArray();
 
-    var bytes = package.GetAsByteArray();
-
-    return File(
+        return File(
         bytes,
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "NhanVien.xlsx");
-}
+    }
 }
