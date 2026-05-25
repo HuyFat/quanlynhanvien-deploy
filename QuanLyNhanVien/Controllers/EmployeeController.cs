@@ -233,46 +233,85 @@ public class EmployeeController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    // XUẤT EXCEL
-    public IActionResult ExportExcel()
+   public IActionResult ExportExcel()
+{
+    var employees = _context.Employees.ToList();
+
+    using var package = new ExcelPackage();
+
+    var worksheet =
+        package.Workbook.Worksheets.Add("NhanVien");
+
+    // Tiêu đề cột
+
+    worksheet.Cells[1,1].Value = "Họ tên";
+    worksheet.Cells[1,2].Value = "Mã NV";
+    worksheet.Cells[1,3].Value = "Khu vực";
+    worksheet.Cells[1,4].Value = "Ngày tạo";
+    worksheet.Cells[1,5].Value = "Ngày sửa";
+    worksheet.Cells[1,6].Value = "Hình ảnh";
+
+    int row = 2;
+
+    foreach(var emp in employees)
     {
-        var employees =
-            _context.Employees.ToList();
+        worksheet.Cells[row,1].Value = emp.HoTen;
+        worksheet.Cells[row,2].Value = emp.MaNhanVien;
+        worksheet.Cells[row,3].Value = emp.KhuVuc;
 
-        using var package =
-            new ExcelPackage();
+        worksheet.Cells[row,4].Value =
+        emp.Ngay.ToString("dd/MM/yyyy");
 
-        var worksheet =
-            package.Workbook.Worksheets.Add("NhanVien");
+        worksheet.Cells[row,5].Value =
+        emp.NgayCapNhat?.ToString("dd/MM/yyyy");
 
-        worksheet.Cells[1,1].Value="Họ tên";
-        worksheet.Cells[1,2].Value="Mã NV";
-        worksheet.Cells[1,3].Value="Khu vực";
-        worksheet.Cells[1,4].Value="Ngày tạo";
-        worksheet.Cells[1,5].Value="Ngày sửa";
+        // THÊM ẢNH VÀO EXCEL
 
-        int row=2;
-
-        foreach(var emp in employees)
+        if(!string.IsNullOrEmpty(emp.ImagePath))
         {
-            worksheet.Cells[row,1].Value=emp.HoTen;
-            worksheet.Cells[row,2].Value=emp.MaNhanVien;
-            worksheet.Cells[row,3].Value=emp.KhuVuc;
-            worksheet.Cells[row,4].Value=
-            emp.Ngay.ToString("dd/MM/yyyy");
+            try
+            {
+                string imagePath =
+                Path.Combine(
+                    _webHostEnvironment.WebRootPath,
+                    emp.ImagePath.TrimStart('/'));
 
-            worksheet.Cells[row,5].Value=
-            emp.NgayCapNhat?.ToString("dd/MM/yyyy");
+                if(System.IO.File.Exists(imagePath))
+                {
+                    worksheet.Row(row).Height = 55;
 
-            row++;
+                    var picture =
+                    worksheet.Drawings.AddPicture(
+                        $"Image_{emp.Id}",
+                        new FileInfo(imagePath));
+
+                    picture.SetPosition(
+                        row - 1,
+                        5,
+                        5,
+                        5);
+
+                    picture.SetSize(60,60);
+                }
+            }
+            catch{}
         }
 
-        var bytes=
-        package.GetAsByteArray();
-
-        return File(
-            bytes,
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "NhanVien.xlsx");
+        row++;
     }
+
+    worksheet.Column(1).Width=25;
+    worksheet.Column(2).Width=20;
+    worksheet.Column(3).Width=20;
+    worksheet.Column(4).Width=20;
+    worksheet.Column(5).Width=20;
+    worksheet.Column(6).Width=18;
+
+    var bytes = package.GetAsByteArray();
+
+    return File(
+        bytes,
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "NhanVien.xlsx");
+}
 }
