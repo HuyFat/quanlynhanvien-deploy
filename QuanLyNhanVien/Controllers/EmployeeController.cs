@@ -21,34 +21,28 @@ public class EmployeeController : Controller
         _hubContext = hubContext;
     }
 
-    // DANH SÁCH + TÌM KIẾM
-
-    public IActionResult Index(
-        string searchString,
-        string khuVuc)
+    // Danh sách
+    public IActionResult Index(string searchString, string khuVuc)
     {
-        var employees =
-        _context.Employees.AsQueryable();
+        var employees = _context.Employees.AsQueryable();
 
         if (!string.IsNullOrEmpty(khuVuc))
         {
-            employees =
-            employees.Where(x =>
-            x.KhuVuc == khuVuc);
+            employees = employees.Where(x =>
+                x.KhuVuc == khuVuc);
         }
 
         if (!string.IsNullOrEmpty(searchString))
         {
-            employees =
-            employees.Where(x =>
-            x.HoTen.Contains(searchString) ||
-            x.MaNhanVien.Contains(searchString));
+            employees = employees.Where(x =>
+                x.HoTen.Contains(searchString) ||
+                x.MaNhanVien.Contains(searchString));
         }
 
         return View(employees.ToList());
     }
 
-    // THÊM
+    // CREATE
 
     public IActionResult Create()
     {
@@ -62,30 +56,23 @@ public class EmployeeController : Controller
     {
         emp.Ngay = DateTime.Today;
 
-        if (imageFile != null &&
-            imageFile.Length > 0)
+        if (imageFile != null && imageFile.Length > 0)
         {
             string fileName =
-            Path.GetFileNameWithoutExtension(
-            imageFile.FileName);
+            Guid.NewGuid().ToString() +
+            Path.GetExtension(imageFile.FileName);
 
-            string extension =
-            Path.GetExtension(
-            imageFile.FileName);
+            string uploadFolder =
+            Path.Combine(
+            _webHostEnvironment.WebRootPath,
+            "uploads");
 
-            string newFileName =
-            fileName + "_" +
-            DateTime.Now.Ticks +
-            extension;
+            Directory.CreateDirectory(uploadFolder);
 
             string filePath =
             Path.Combine(
-            _webHostEnvironment.WebRootPath,
-            "uploads",
-            newFileName);
-
-            Directory.CreateDirectory(
-            Path.GetDirectoryName(filePath)!);
+            uploadFolder,
+            fileName);
 
             using(var stream =
                   new FileStream(
@@ -96,7 +83,7 @@ public class EmployeeController : Controller
             }
 
             emp.ImagePath =
-            "/uploads/" + newFileName;
+            "/uploads/" + fileName;
         }
 
         _context.Add(emp);
@@ -106,7 +93,7 @@ public class EmployeeController : Controller
         return RedirectToAction("Index");
     }
 
-    // SỬA
+    // EDIT
 
     public IActionResult Edit(int id)
     {
@@ -125,7 +112,7 @@ public class EmployeeController : Controller
         Employee emp,
         IFormFile? imageFile)
     {
-        if(id!=emp.Id)
+        if(id != emp.Id)
             return BadRequest();
 
         var existingEmployee =
@@ -134,54 +121,49 @@ public class EmployeeController : Controller
         if(existingEmployee==null)
             return NotFound();
 
-        existingEmployee.HoTen=
+        existingEmployee.HoTen =
         emp.HoTen;
 
-        existingEmployee.MaNhanVien=
+        existingEmployee.MaNhanVien =
         emp.MaNhanVien;
 
-        existingEmployee.KhuVuc=
+        existingEmployee.KhuVuc =
         emp.KhuVuc;
 
-        existingEmployee.GhiChu=
+        existingEmployee.GhiChu =
         emp.GhiChu;
 
-        existingEmployee.Latitude=
+        existingEmployee.Latitude =
         emp.Latitude;
 
-        existingEmployee.Longitude=
+        existingEmployee.Longitude =
         emp.Longitude;
 
-        existingEmployee.NgayCapNhat=
+        existingEmployee.NgayCapNhat =
         DateTime.Today;
 
-        // Chỉ thay ảnh khi chọn ảnh mới
+        // cập nhật ảnh mới
 
-        if(imageFile!=null &&
-           imageFile.Length>0)
+        if(imageFile != null &&
+           imageFile.Length > 0)
         {
-            string fileName=
-            Path.GetFileNameWithoutExtension(
-            imageFile.FileName);
+            string fileName =
+            Guid.NewGuid().ToString() +
+            Path.GetExtension(imageFile.FileName);
 
-            string extension=
-            Path.GetExtension(
-            imageFile.FileName);
-
-            string newFileName=
-            fileName+"_"+DateTime.Now.Ticks+
-            extension;
-
-            string filePath=
+            string uploadFolder =
             Path.Combine(
             _webHostEnvironment.WebRootPath,
-            "uploads",
-            newFileName);
+            "uploads");
 
-            Directory.CreateDirectory(
-            Path.GetDirectoryName(filePath)!);
+            Directory.CreateDirectory(uploadFolder);
 
-            using(var stream=
+            string filePath =
+            Path.Combine(
+            uploadFolder,
+            fileName);
+
+            using(var stream =
                   new FileStream(
                   filePath,
                   FileMode.Create))
@@ -189,8 +171,8 @@ public class EmployeeController : Controller
                 await imageFile.CopyToAsync(stream);
             }
 
-            existingEmployee.ImagePath=
-            "/uploads/"+newFileName;
+            existingEmployee.ImagePath =
+            "/uploads/" + fileName;
         }
 
         _context.Update(existingEmployee);
@@ -200,11 +182,11 @@ public class EmployeeController : Controller
         return RedirectToAction("Index");
     }
 
-    // XÓA
+    // DELETE
 
     public IActionResult Delete(int id)
     {
-        var employee=
+        var employee =
         _context.Employees.Find(id);
 
         if(employee==null)
@@ -213,14 +195,14 @@ public class EmployeeController : Controller
         return View(employee);
     }
 
-    [HttpPost,ActionName("Delete")]
+    [HttpPost, ActionName("Delete")]
     public IActionResult DeleteConfirmed(
         int id)
     {
-        var employee=
+        var employee =
         _context.Employees.Find(id);
 
-        if(employee!=null)
+        if(employee != null)
         {
             _context.Remove(employee);
             _context.SaveChanges();
@@ -229,7 +211,7 @@ public class EmployeeController : Controller
         return RedirectToAction("Index");
     }
 
-    // XUẤT EXCEL
+    // EXPORT EXCEL
 
     public IActionResult ExportExcel()
     {
@@ -254,44 +236,32 @@ public class EmployeeController : Controller
 
         foreach(var emp in employees)
         {
-            worksheet.Cells[row,1].Value=
-            emp.HoTen;
-
-            worksheet.Cells[row,2].Value=
-            emp.MaNhanVien;
-
-            worksheet.Cells[row,3].Value=
-            emp.KhuVuc;
-
+            worksheet.Cells[row,1].Value=emp.HoTen;
+            worksheet.Cells[row,2].Value=emp.MaNhanVien;
+            worksheet.Cells[row,3].Value=emp.KhuVuc;
             worksheet.Cells[row,4].Value=
             emp.Ngay.ToString("dd/MM/yyyy");
 
             worksheet.Cells[row,5].Value=
             emp.NgayCapNhat?.ToString("dd/MM/yyyy");
 
-            // ẢNH
+            // thêm ảnh
 
-            if(!string.IsNullOrEmpty(
-               emp.ImagePath))
+            if(!string.IsNullOrEmpty(emp.ImagePath))
             {
                 try
                 {
-                    string imagePath=
+                    string imagePath =
                     Path.Combine(
                     _webHostEnvironment.WebRootPath,
-                    emp.ImagePath
-                    .Replace("/", "\\")
-                    .TrimStart('\\'));
+                    emp.ImagePath.TrimStart('/'));
 
-                    if(System.IO.File.Exists(
-                       imagePath))
+                    if(System.IO.File.Exists(imagePath))
                     {
-                        worksheet.Row(row)
-                        .Height=60;
+                        worksheet.Row(row).Height = 60;
 
-                        var picture=
-                        worksheet.Drawings
-                        .AddPicture(
+                        var picture =
+                        worksheet.Drawings.AddPicture(
                         $"Image_{emp.Id}",
                         new FileInfo(imagePath));
 
@@ -301,15 +271,12 @@ public class EmployeeController : Controller
                         5,
                         5);
 
-                        picture.SetSize(
-                        60,
-                        60);
+                        picture.SetSize(60,60);
                     }
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine(
-                    ex.Message);
+                    Console.WriteLine(ex.Message);
                 }
             }
 
@@ -321,9 +288,9 @@ public class EmployeeController : Controller
         worksheet.Column(3).Width=20;
         worksheet.Column(4).Width=20;
         worksheet.Column(5).Width=20;
-        worksheet.Column(6).Width=18;
+        worksheet.Column(6).Width=20;
 
-        var bytes=
+        var bytes =
         package.GetAsByteArray();
 
         return File(
